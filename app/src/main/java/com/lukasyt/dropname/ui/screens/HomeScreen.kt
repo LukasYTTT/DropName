@@ -1,6 +1,7 @@
 package com.lukasyt.dropname.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -40,7 +41,6 @@ fun HomeScreen(
             .fillMaxSize()
             .background(DarkBackground)
     ) {
-        // Blurred background effect
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -48,9 +48,17 @@ fun HomeScreen(
         ) {
             Box(
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .size(300.dp)
+                    .align(Alignment.TopEnd)
+                    .size(250.dp)
+                    .offset(x = 50.dp, y = (-50).dp)
                     .background(PrimaryBlue.copy(alpha = 0.4f), shape = CircleShape)
+            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .size(300.dp)
+                    .offset(x = (-50).dp, y = 50.dp)
+                    .background(androidx.compose.ui.graphics.Color(0xFF8A2BE2).copy(alpha = 0.3f), shape = CircleShape)
             )
         }
 
@@ -122,9 +130,10 @@ fun HomeScreen(
                     onClick = onNavigateToSetup,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(50.dp),
+                        .height(50.dp)
+                        .border(1.dp, GlassBorder, RoundedCornerShape(14.dp)),
                     shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = SurfaceColor)
+                    colors = ButtonDefaults.buttonColors(containerColor = GlassBackground)
                 ) {
                     Text("Edit Profile", color = TextPrimary, fontSize = 17.sp)
                 }
@@ -139,9 +148,10 @@ fun HomeScreen(
                         onClick = onNavigateToHistory,
                         modifier = Modifier
                             .weight(1f)
-                            .height(50.dp),
+                            .height(50.dp)
+                            .border(1.dp, GlassBorder, RoundedCornerShape(14.dp)),
                         shape = RoundedCornerShape(14.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = SurfaceColor)
+                        colors = ButtonDefaults.buttonColors(containerColor = GlassBackground)
                     ) {
                         Text("History", color = TextPrimary, fontSize = 17.sp)
                     }

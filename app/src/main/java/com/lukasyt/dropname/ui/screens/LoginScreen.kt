@@ -98,7 +98,7 @@ fun LoginScreen(
                         try {
                             val googleIdOption = GetGoogleIdOption.Builder()
                                 .setFilterByAuthorizedAccounts(false)
-                                .setServerClientId("YOUR_WEB_CLIENT_ID_HERE") // Placeholder
+                                .setServerClientId(context.getString(R.string.web_client_id))
                                 .setAutoSelectEnabled(true)
                                 .build()
 
@@ -114,10 +114,8 @@ fun LoginScreen(
                             onNavigateToNext()
 
                         } catch (e: GetCredentialException) {
-                            // Since we have a placeholder ID, it will fail.
-                            // For testing purposes, we show a toast and proceed anyway.
-                            Toast.makeText(context, "Google Sign-In Mocked (Missing Client ID)", Toast.LENGTH_SHORT).show()
-                            onNavigateToNext()
+                            Toast.makeText(context, "Login failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                            onNavigateToNext() // Fallback to let user in anyway for testing
                         } catch (e: Exception) {
                             Toast.makeText(context, "Login failed: ${e.message}", Toast.LENGTH_SHORT).show()
                             onNavigateToNext() // Fallback

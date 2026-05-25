@@ -47,11 +47,13 @@ fun ProfileSetupScreen(
     var name by remember { mutableStateOf("") }
     var profileImageBase64 by remember { mutableStateOf<String?>(null) }
     
-    // Dynamic fields state
     var fields by remember { mutableStateOf(listOf(
         ProfileField("Phone", ""),
         ProfileField("Email", "")
     )) }
+    
+    var showNetworkDialog by remember { mutableStateOf(false) }
+    val networkOptions = listOf("Instagram", "TikTok", "YouTube", "Snapchat", "LinkedIn", "Twitter", "WhatsApp", "Custom Link")
 
     LaunchedEffect(Unit) {
         val profile = repository.userProfileFlow.firstOrNull()
@@ -198,14 +200,40 @@ fun ProfileSetupScreen(
 
             // Add Custom Field Button
             TextButton(
-                onClick = {
-                    fields = fields + ProfileField("Custom Link", "")
-                },
+                onClick = { showNetworkDialog = true },
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("+", color = PrimaryBlue, fontSize = 24.sp)
                 Spacer(modifier = Modifier.width(8.dp))
-                Text("Add Custom Field", color = PrimaryBlue, fontSize = 17.sp)
+                Text("Add Social Link", color = PrimaryBlue, fontSize = 17.sp)
+            }
+
+            if (showNetworkDialog) {
+                AlertDialog(
+                    onDismissRequest = { showNetworkDialog = false },
+                    title = { Text("Select Network") },
+                    text = {
+                        Column {
+                            networkOptions.forEach { network ->
+                                TextButton(
+                                    onClick = {
+                                        fields = fields + ProfileField(network, "")
+                                        showNetworkDialog = false
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(network, fontSize = 16.sp, color = TextPrimary)
+                                }
+                            }
+                        }
+                    },
+                    confirmButton = {
+                        TextButton(onClick = { showNetworkDialog = false }) {
+                            Text("Cancel", color = Color.Red)
+                        }
+                    },
+                    containerColor = CardBackground
+                )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
