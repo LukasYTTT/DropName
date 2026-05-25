@@ -41,24 +41,25 @@ fun HomeScreen(
             .fillMaxSize()
             .background(DarkBackground)
     ) {
+        // Massive NameDrop style glow
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .blur(radius = 40.dp)
+                .blur(radius = 80.dp)
         ) {
             Box(
                 modifier = Modifier
                     .align(Alignment.TopEnd)
-                    .size(250.dp)
-                    .offset(x = 50.dp, y = (-50).dp)
-                    .background(PrimaryBlue.copy(alpha = 0.4f), shape = CircleShape)
+                    .size(500.dp)
+                    .offset(x = 100.dp, y = (-100).dp)
+                    .background(PrimaryBlue.copy(alpha = 0.6f), shape = CircleShape)
             )
             Box(
                 modifier = Modifier
                     .align(Alignment.BottomStart)
-                    .size(300.dp)
-                    .offset(x = (-50).dp, y = 50.dp)
-                    .background(androidx.compose.ui.graphics.Color(0xFF8A2BE2).copy(alpha = 0.3f), shape = CircleShape)
+                    .size(600.dp)
+                    .offset(x = (-100).dp, y = 100.dp)
+                    .background(androidx.compose.ui.graphics.Color(0xFF8A2BE2).copy(alpha = 0.5f), shape = CircleShape)
             )
         }
 

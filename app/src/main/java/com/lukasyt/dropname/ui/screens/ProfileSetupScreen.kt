@@ -86,18 +86,25 @@ fun ProfileSetupScreen(
             .fillMaxSize()
             .background(DarkBackground)
     ) {
-        // Blurred background effect
+        // Massive NameDrop style glow
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .blur(radius = 30.dp)
+                .blur(radius = 80.dp)
         ) {
             Box(
                 modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .size(250.dp)
-                    .offset(x = 50.dp, y = (-50).dp)
-                    .background(PrimaryBlue.copy(alpha = 0.3f), shape = CircleShape)
+                    .align(Alignment.TopStart)
+                    .size(500.dp)
+                    .offset(x = (-100).dp, y = (-100).dp)
+                    .background(PrimaryBlue.copy(alpha = 0.6f), shape = CircleShape)
+            )
+            Box(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .size(600.dp)
+                    .offset(x = 100.dp, y = 100.dp)
+                    .background(androidx.compose.ui.graphics.Color(0xFF8A2BE2).copy(alpha = 0.5f), shape = CircleShape)
             )
         }
 
@@ -138,26 +145,24 @@ fun ProfileSetupScreen(
 
             // iOS-style form container
             Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(CardBackground)
-                    .padding(16.dp)
+                modifier = Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Full Name") },
+                    label = { Text("Full Name", color = TextSecondary) },
                     modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(16.dp),
                     colors = OutlinedTextFieldDefaults.colors(
-                        focusedBorderColor = Color.Transparent,
-                        unfocusedBorderColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedContainerColor = Color.Transparent
+                        focusedBorderColor = GlassBorder,
+                        unfocusedBorderColor = GlassBorder,
+                        focusedContainerColor = GlassBackground,
+                        unfocusedContainerColor = GlassBackground,
+                        focusedTextColor = TextPrimary,
+                        unfocusedTextColor = TextPrimary
                     )
                 )
-
-                Divider(color = Color.DarkGray, modifier = Modifier.padding(vertical = 8.dp))
 
                 // Dynamic Fields
                 fields.forEachIndexed { index, field ->
@@ -172,13 +177,16 @@ fun ProfileSetupScreen(
                                 updated[index] = field.copy(value = newValue)
                                 fields = updated
                             },
-                            label = { Text(field.label) },
+                            label = { Text(field.label, color = TextSecondary) },
                             modifier = Modifier.weight(1f),
+                            shape = RoundedCornerShape(16.dp),
                             colors = OutlinedTextFieldDefaults.colors(
-                                focusedBorderColor = Color.Transparent,
-                                unfocusedBorderColor = Color.Transparent,
-                                focusedContainerColor = Color.Transparent,
-                                unfocusedContainerColor = Color.Transparent
+                                focusedBorderColor = GlassBorder,
+                                unfocusedBorderColor = GlassBorder,
+                                focusedContainerColor = GlassBackground,
+                                unfocusedContainerColor = GlassBackground,
+                                focusedTextColor = TextPrimary,
+                                unfocusedTextColor = TextPrimary
                             )
                         )
                         
