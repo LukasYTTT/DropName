@@ -18,8 +18,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -30,16 +33,19 @@ import com.lukasyt.dropname.theme.*
 @Composable
 fun ProfileCard(profile: UserProfile, modifier: Modifier = Modifier) {
     Card(
-        modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(24.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+        modifier = modifier
+            .size(width = 320.dp, height = 240.dp)
+            .graphicsLayer {
+                renderEffect = BlurEffect(20f, 20f, TileMode.Clamp)
+            },
+        shape = RoundedCornerShape(28.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+        border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.2f))
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(24.dp))
-                .background(GlassBackground)
-                .border(1.dp, GlassBorder, RoundedCornerShape(24.dp))
+                .fillMaxSize()
+                .background(Color.White.copy(alpha = 0.12f))
                 .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -80,47 +86,23 @@ fun ProfileCard(profile: UserProfile, modifier: Modifier = Modifier) {
             
             // Dynamic fields
             profile.fields.forEachIndexed { index, field ->
-                val brandColor = getBrandColor(field.label)
                 val icon = getSocialIcon(field.label)
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 12.dp),
+                        .padding(vertical = 4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(brandColor),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (icon != null) {
-                            Icon(
-                                imageVector = icon,
-                                contentDescription = field.label,
-                                tint = Color.White,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        } else {
-                            Text(
-                                text = field.label.take(1).uppercase(),
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
+                    if (icon != null) {
+                        Icon(
+                            imageVector = icon,
+                            contentDescription = field.label,
+                            tint = Color.White.copy(alpha = 0.5f),
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
                     }
-                    
-                    Spacer(modifier = Modifier.width(16.dp))
-                    
-                    Column {
-                        Text(text = field.label, color = TextSecondary, fontSize = 13.sp)
-                        Text(text = field.value, color = TextPrimary, fontSize = 17.sp, fontWeight = FontWeight.Medium)
-                    }
-                }
-                if (index < profile.fields.size - 1) {
-                    HorizontalDivider(color = GlassBorder, modifier = Modifier.padding(start = 56.dp, top = 4.dp, bottom = 4.dp))
+                    Text(text = field.value, color = Color.White.copy(alpha = 0.7f), fontSize = 16.sp, fontWeight = FontWeight.Normal)
                 }
             }
         }

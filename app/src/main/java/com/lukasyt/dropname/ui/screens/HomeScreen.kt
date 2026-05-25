@@ -19,6 +19,8 @@ import androidx.compose.ui.unit.sp
 import com.lukasyt.dropname.data.ProfileRepository
 import com.lukasyt.dropname.data.UserProfile
 import com.lukasyt.dropname.theme.*
+import com.lukasyt.dropname.ui.components.AuroraBackground
+import com.lukasyt.dropname.ui.components.ProfileCard
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 
@@ -36,32 +38,7 @@ fun HomeScreen(
         profile = repository.userProfileFlow.firstOrNull()
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(DarkBackground)
-    ) {
-        // Massive NameDrop style glow
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .blur(radius = 80.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .size(500.dp)
-                    .offset(x = 100.dp, y = (-100).dp)
-                    .background(PrimaryBlue.copy(alpha = 0.6f), shape = CircleShape)
-            )
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .size(600.dp)
-                    .offset(x = (-100).dp, y = 100.dp)
-                    .background(androidx.compose.ui.graphics.Color(0xFF8A2BE2).copy(alpha = 0.5f), shape = CircleShape)
-            )
-        }
+    AuroraBackground {
 
         Column(
             modifier = Modifier
@@ -80,50 +57,7 @@ fun HomeScreen(
             )
 
             if (profile != null) {
-                // Profile Card Apple Style
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(CardBackground)
-                        .padding(24.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(100.dp)
-                            .clip(CircleShape)
-                            .background(SurfaceColor),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(profile?.name?.take(1) ?: "", fontSize = 40.sp, color = TextPrimary)
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    Text(
-                        text = profile?.name ?: "",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = TextPrimary
-                    )
-
-                    Spacer(modifier = Modifier.height(24.dp))
-
-                    // Dynamic Fields inside Card
-                    profile?.fields?.forEach { field ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            Text(field.label, color = TextSecondary, fontSize = 16.sp)
-                            Text(field.value, color = PrimaryBlue, fontSize = 16.sp, fontWeight = FontWeight.Medium)
-                        }
-                        Divider(color = Color.DarkGray, modifier = Modifier.padding(vertical = 4.dp))
-                    }
-                }
+                ProfileCard(profile = profile!!)
 
                 Spacer(modifier = Modifier.height(32.dp))
 

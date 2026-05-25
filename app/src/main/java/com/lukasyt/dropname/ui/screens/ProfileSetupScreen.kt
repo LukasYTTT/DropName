@@ -9,6 +9,7 @@ import android.util.Base64
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -31,6 +32,7 @@ import com.lukasyt.dropname.data.ProfileField
 import com.lukasyt.dropname.data.ProfileRepository
 import com.lukasyt.dropname.data.UserProfile
 import com.lukasyt.dropname.theme.*
+import com.lukasyt.dropname.ui.components.AuroraBackground
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
@@ -81,32 +83,7 @@ fun ProfileSetupScreen(
         }
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(DarkBackground)
-    ) {
-        // Massive NameDrop style glow
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .blur(radius = 80.dp)
-        ) {
-            Box(
-                modifier = Modifier
-                    .align(Alignment.TopStart)
-                    .size(500.dp)
-                    .offset(x = (-100).dp, y = (-100).dp)
-                    .background(PrimaryBlue.copy(alpha = 0.6f), shape = CircleShape)
-            )
-            Box(
-                modifier = Modifier
-                    .align(Alignment.BottomEnd)
-                    .size(600.dp)
-                    .offset(x = 100.dp, y = 100.dp)
-                    .background(androidx.compose.ui.graphics.Color(0xFF8A2BE2).copy(alpha = 0.5f), shape = CircleShape)
-            )
-        }
+    AuroraBackground {
 
         Column(
             modifier = Modifier
@@ -128,9 +105,10 @@ fun ProfileSetupScreen(
             // Profile Picture
             Box(
                 modifier = Modifier
-                    .size(100.dp)
+                    .size(120.dp)
                     .clip(CircleShape)
-                    .background(CardBackground)
+                    .background(Color.White.copy(alpha = 0.08f))
+                    .border(2.dp, Color.White.copy(alpha = 0.3f), CircleShape)
                     .clickable { launcher.launch("image/*") },
                 contentAlignment = Alignment.Center
             ) {
@@ -140,6 +118,8 @@ fun ProfileSetupScreen(
                     Text("+", color = PrimaryBlue, fontSize = 40.sp, fontWeight = FontWeight.Light)
                 }
             }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text("Tippe um Foto auszuwählen", fontSize = 14.sp, color = TextSecondary)
             
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -260,9 +240,9 @@ fun ProfileSetupScreen(
                     .fillMaxWidth()
                     .height(50.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = PrimaryBlue)
+                colors = ButtonDefaults.buttonColors(containerColor = iOSBlue)
             ) {
-                Text("Save Profile", fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                Text("Weiter", fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
             }
             
             Spacer(modifier = Modifier.height(32.dp))

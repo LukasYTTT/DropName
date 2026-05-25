@@ -20,3 +20,7 @@ val SurfaceColor = GlassBackground // Alias to fix unresolved references
 val PremiumGradientStart = Color(0xFF1C1C1E) // iOS Dark Gray
 val PremiumGradientEnd = Color(0xFF000000)
 val CardBackground = Color(0x801C1C1E) // Semi-transparent for blur effect
+
+val iOSGreen = Color(0xFF30D158)
+val iOSDarkGray = Color(0xFF48484A)
+val iOSBlue = Color(0xFF007AFF)
