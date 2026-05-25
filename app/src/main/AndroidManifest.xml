@@ -38,6 +38,14 @@
                 <data android:host="*.workers.dev" />
                 <data android:pathPrefix="/p/" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:host="*.workers.dev" />
+                <data android:pathPrefix="/p/" />
+            </intent-filter>
         </activity>
 
         <service android:name=".nfc.NfcContactService"

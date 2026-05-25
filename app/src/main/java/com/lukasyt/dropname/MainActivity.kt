@@ -75,9 +75,30 @@ class MainActivity : ComponentActivity() {
             val rawMessages = intent.getParcelableArrayExtra(NfcAdapter.EXTRA_NDEF_MESSAGES)
             if (rawMessages != null && rawMessages.isNotEmpty()) {
                 val ndefMessage = rawMessages[0] as NdefMessage
+                
+                // Parse standard URI record first (fast Cloudflare sync)
+                val record = ndefMessage.records.firstOrNull()
+                if (record != null) {
+                    try {
+                        val uri = record.toUri()
+                        if (uri != null) {
+                            Log.d(TAG, "Received NFC NDEF URI: $uri")
+                            val pathSegments = uri.pathSegments
+                            if (pathSegments.size >= 2 && pathSegments[0] == "p") {
+                                val profileId = pathSegments[1]
+                                fetchProfileFromServer(profileId)
+                                return
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.d(TAG, "NFC NDEF Record is not a URI, trying fallback...")
+                    }
+                }
+
+                // Fallback: parse custom NDEF external record (old local JSON)
                 val profile = NdefHelper.parseProfileFromNdefMessage(ndefMessage)
                 if (profile != null) {
-                    Log.d(TAG, "Received profile via NFC: ${profile.name}")
+                    Log.d(TAG, "Received profile via fallback NFC: ${profile.name}")
                     receivedProfileJson.value = gson.toJson(profile)
                 }
             }
