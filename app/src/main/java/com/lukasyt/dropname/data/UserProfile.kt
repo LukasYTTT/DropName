@@ -8,5 +8,6 @@ data class ProfileField(
 data class UserProfile(
     val name: String,
     val fields: List<ProfileField> = emptyList(),
-    val profileImageBase64: String? = null // Compressed thumbnail for NFC
+    val profileImageBase64: String? = null, // Compressed thumbnail for NFC
+    val id: String? = null
 )

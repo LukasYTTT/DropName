@@ -58,6 +58,7 @@ fun ProfileSetupScreen(
     )) }
     
     var showNetworkDialog by remember { mutableStateOf(false) }
+    var isSaving by remember { mutableStateOf(false) }
     val networkOptions = listOf("Instagram", "TikTok", "YouTube", "Snapchat", "LinkedIn", "Twitter", "WhatsApp", "Custom Link")
 
     LaunchedEffect(Unit) {
@@ -250,11 +251,24 @@ fun ProfileSetupScreen(
 
             Button(
                 onClick = {
-                    if (name.isNotBlank()) {
+                    if (name.isNotBlank() && !isSaving) {
                         scope.launch {
-                            val profile = UserProfile(name, fields, profileImageBase64)
-                            repository.saveProfile(profile)
-                            onNavigateToHome()
+                            isSaving = true
+                            try {
+                                val tempProfile = UserProfile(
+                                    name = name,
+                                    fields = fields,
+                                    profileImageBase64 = profileImageBase64
+                                )
+                                val serverId = repository.uploadProfile(tempProfile)
+                                val finalProfile = tempProfile.copy(id = serverId)
+                                repository.saveProfile(finalProfile)
+                                onNavigateToHome()
+                            } catch (e: Exception) {
+                                e.printStackTrace()
+                            } finally {
+                                isSaving = false
+                            }
                         }
                     }
                 },
@@ -262,9 +276,14 @@ fun ProfileSetupScreen(
                     .fillMaxWidth()
                     .height(50.dp),
                 shape = RoundedCornerShape(14.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = iOSBlue)
+                colors = ButtonDefaults.buttonColors(containerColor = iOSBlue),
+                enabled = !isSaving
             ) {
-                Text("Weiter", fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                if (isSaving) {
+                    CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+                } else {
+                    Text("Weiter", fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = Color.White)
+                }
             }
             
             Spacer(modifier = Modifier.height(32.dp))

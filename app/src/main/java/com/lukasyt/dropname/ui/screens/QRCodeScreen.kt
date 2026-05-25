@@ -34,12 +34,15 @@ fun QRCodeScreen(
     var qrBitmap by remember { mutableStateOf<Bitmap?>(null) }
     
     LaunchedEffect(profile) {
-        val gson = Gson()
-        // Create a minimal version of the profile to save QR data space
-        val minimalProfile = profile.copy(profileImageBase64 = null)
-        val json = gson.toJson(minimalProfile)
+        val url = if (profile.id != null) {
+            "${com.lukasyt.dropname.data.ProfileRepository.BASE_URL}/p/${profile.id}"
+        } else {
+            val gson = Gson()
+            val minimalProfile = profile.copy(profileImageBase64 = null)
+            gson.toJson(minimalProfile)
+        }
         
-        qrBitmap = generateQrCode(json)
+        qrBitmap = generateQrCode(url)
     }
 
     Box(
