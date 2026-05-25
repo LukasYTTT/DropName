@@ -34,10 +34,7 @@ import com.lukasyt.dropname.theme.*
 fun ProfileCard(profile: UserProfile, modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
-            .size(width = 320.dp, height = 240.dp)
-            .graphicsLayer {
-                renderEffect = BlurEffect(20f, 20f, TileMode.Clamp)
-            },
+            .size(width = 320.dp, height = 240.dp),
         shape = RoundedCornerShape(28.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         border = androidx.compose.foundation.BorderStroke(1.dp, Color.White.copy(alpha = 0.2f))

@@ -8,6 +8,7 @@ import android.provider.MediaStore
 import android.util.Base64
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -24,6 +25,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -71,15 +74,19 @@ fun ProfileSetupScreen(
     val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri?.let {
             val bitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ImageDecoder.decodeBitmap(ImageDecoder.createSource(context.contentResolver, it))
+                val source = ImageDecoder.createSource(context.contentResolver, it)
+                ImageDecoder.decodeBitmap(source) { decoder, _, _ ->
+                    decoder.allocator = ImageDecoder.ALLOCATOR_SOFTWARE
+                    decoder.isMutableRequired = true
+                }
             } else {
                 MediaStore.Images.Media.getBitmap(context.contentResolver, it)
             }
-            val scaledBitmap = Bitmap.createScaledBitmap(bitmap, 64, 64, true)
+            val scaledBitmap = Bitmap.createScaledBitmap(bitmap, 256, 256, true)
             val outputStream = ByteArrayOutputStream()
-            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
+            scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 70, outputStream)
             val bytes = outputStream.toByteArray()
-            profileImageBase64 = Base64.encodeToString(bytes, Base64.DEFAULT)
+            profileImageBase64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
         }
     }
 
@@ -113,7 +120,22 @@ fun ProfileSetupScreen(
                 contentAlignment = Alignment.Center
             ) {
                 if (profileImageBase64 != null) {
-                    Text(text = "✓", color = Color.Green, fontSize = 40.sp)
+                    val bitmap = remember(profileImageBase64) {
+                        try {
+                            val bytes = Base64.decode(profileImageBase64, Base64.NO_WRAP)
+                            android.graphics.BitmapFactory.decodeByteArray(bytes, 0, bytes.size)?.asImageBitmap()
+                        } catch (e: Exception) { null }
+                    }
+                    if (bitmap != null) {
+                        Image(
+                            bitmap = bitmap,
+                            contentDescription = "Profile Picture",
+                            modifier = Modifier.fillMaxSize(),
+                            contentScale = ContentScale.Crop
+                        )
+                    } else {
+                        Text(text = "✓", color = Color.Green, fontSize = 40.sp)
+                    }
                 } else {
                     Text("+", color = PrimaryBlue, fontSize = 40.sp, fontWeight = FontWeight.Light)
                 }
